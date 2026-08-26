@@ -39,10 +39,7 @@ class _HomeLoginState extends State<HomeLogin> {
     // ------------------------------------------------------------
 
     if (email.isEmpty || password.isEmpty) {
-      _showMessage(
-        'Please enter your email and password.',
-        isError: true,
-      );
+      _showMessage('Please enter your email and password.', isError: true);
       return;
     }
 
@@ -72,9 +69,7 @@ class _HomeLoginState extends State<HomeLogin> {
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (context) => const DashboardPage(),
-        ),
+        MaterialPageRoute(builder: (context) => const DashboardPage()),
       );
     } on FirebaseAuthException catch (e) {
       if (!mounted) return;
@@ -118,10 +113,7 @@ class _HomeLoginState extends State<HomeLogin> {
     } catch (e) {
       if (!mounted) return;
 
-      _showMessage(
-        'Something went wrong. Please try again.',
-        isError: true,
-      );
+      _showMessage('Something went wrong. Please try again.', isError: true);
     } finally {
       if (mounted) {
         setState(() {
@@ -146,20 +138,14 @@ class _HomeLoginState extends State<HomeLogin> {
     emailController.clear();
     passwordController.clear();
 
-    _showMessage(
-      'Account created successfully. Please login.',
-      isError: false,
-    );
+    _showMessage('Account created successfully. Please login.', isError: false);
   }
 
   // ============================================================
   // SHOW MESSAGE
   // ============================================================
 
-  void _showMessage(
-    String message, {
-    required bool isError,
-  }) {
+  void _showMessage(String message, {required bool isError}) {
     if (!mounted) return;
 
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -179,13 +165,10 @@ class _HomeLoginState extends State<HomeLogin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xff1d1d1d),
+      backgroundColor: const Color(0xfff5f6fd),
       body: SafeArea(
-        child: Center(
+        child: SizedBox.expand(
           child: Container(
-            constraints: const BoxConstraints(
-              maxWidth: 430,
-            ),
             color: const Color(0xfff5f6fd),
             child: SingleChildScrollView(
               padding: EdgeInsets.fromLTRB(
@@ -199,21 +182,13 @@ class _HomeLoginState extends State<HomeLogin> {
                   // ==================================================
                   // MAIN CARD
                   // ==================================================
-
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.fromLTRB(
-                      22,
-                      22,
-                      22,
-                      20,
-                    ),
+                    padding: const EdgeInsets.fromLTRB(22, 22, 22, 20),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(9),
-                      border: Border.all(
-                        color: const Color(0xffd2d7e0),
-                      ),
+                      border: Border.all(color: const Color(0xffd2d7e0)),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -221,7 +196,6 @@ class _HomeLoginState extends State<HomeLogin> {
                         // ==================================================
                         // LOGO / TITLE
                         // ==================================================
-
                         const Row(
                           children: [
                             Icon(
@@ -246,7 +220,6 @@ class _HomeLoginState extends State<HomeLogin> {
                         // ==================================================
                         // LOGIN / REGISTER TABS
                         // ==================================================
-
                         Row(
                           children: [
                             _Tab(
@@ -278,7 +251,6 @@ class _HomeLoginState extends State<HomeLogin> {
                         // ==================================================
                         // LOGIN / REGISTER FORM
                         // ==================================================
-
                         AnimatedSwitcher(
                           duration: const Duration(milliseconds: 180),
                           child: isLogin
@@ -290,8 +262,7 @@ class _HomeLoginState extends State<HomeLogin> {
                                   isLoading: isLoading,
                                   togglePassword: () {
                                     setState(() {
-                                      obscurePassword =
-                                          !obscurePassword;
+                                      obscurePassword = !obscurePassword;
                                     });
                                   },
                                   onLogin: _login,
@@ -310,7 +281,6 @@ class _HomeLoginState extends State<HomeLogin> {
                   // ==================================================
                   // FOOTER
                   // ==================================================
-
                   const Icon(
                     Icons.verified_user_outlined,
                     size: 12,
@@ -332,10 +302,7 @@ class _HomeLoginState extends State<HomeLogin> {
 
                   const Text(
                     '© 2024 University of Puthisastra. All Rights Reserved.',
-                    style: TextStyle(
-                      fontSize: 8,
-                      color: Color(0xff9ca3af),
-                    ),
+                    style: TextStyle(fontSize: 8, color: Color(0xff9ca3af)),
                   ),
                 ],
               ),
@@ -383,12 +350,8 @@ class _Tab extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 9,
-            fontWeight: selected
-                ? FontWeight.w700
-                : FontWeight.w500,
-            color: selected
-                ? const Color(0xff062b55)
-                : const Color(0xff3f4652),
+            fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+            color: selected ? const Color(0xff062b55) : const Color(0xff3f4652),
           ),
         ),
       ),
@@ -436,10 +399,7 @@ class _LoginForm extends StatelessWidget {
 
         const Text(
           'Log in with your university credentials.',
-          style: TextStyle(
-            fontSize: 11,
-            color: Color(0xff4b5563),
-          ),
+          style: TextStyle(fontSize: 11, color: Color(0xff4b5563)),
         ),
 
         const SizedBox(height: 21),
@@ -459,9 +419,7 @@ class _LoginForm extends StatelessWidget {
 
         const Row(
           children: [
-            Expanded(
-              child: _Label('PASSWORD'),
-            ),
+            Expanded(child: _Label('PASSWORD')),
             Text(
               'FORGOT PASSWORD?',
               style: TextStyle(
@@ -496,7 +454,6 @@ class _LoginForm extends StatelessWidget {
         // ==========================================================
         // LOGIN BUTTON
         // ==========================================================
-
         SizedBox(
           width: double.infinity,
           height: 42,
@@ -531,10 +488,7 @@ class _LoginForm extends StatelessWidget {
                         ),
                       ),
                       SizedBox(width: 5),
-                      Icon(
-                        Icons.arrow_forward,
-                        size: 18,
-                      ),
+                      Icon(Icons.arrow_forward, size: 18),
                     ],
                   ),
           ),
@@ -555,10 +509,7 @@ class _LoginForm extends StatelessWidget {
             children: [
               Text(
                 'New to the university network?',
-                style: TextStyle(
-                  fontSize: 10,
-                  color: Color(0xff5b6470),
-                ),
+                style: TextStyle(fontSize: 10, color: Color(0xff5b6470)),
               ),
               SizedBox(height: 3),
               Text(
@@ -627,37 +578,22 @@ class _Input extends StatelessWidget {
       controller: controller,
       obscureText: obscure,
       keyboardType: keyboardType,
-      style: const TextStyle(
-        fontSize: 12,
-      ),
+      style: const TextStyle(fontSize: 12),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: const TextStyle(
-          fontSize: 11,
-          color: Color(0xff788190),
-        ),
-        prefixIcon: Icon(
-          icon,
-          size: 17,
-          color: const Color(0xff4c5767),
-        ),
+        hintStyle: const TextStyle(fontSize: 11, color: Color(0xff788190)),
+        prefixIcon: Icon(icon, size: 17, color: const Color(0xff4c5767)),
         suffixIcon: suffix,
         filled: true,
         fillColor: const Color(0xfff0f4fe),
-        contentPadding: const EdgeInsets.symmetric(
-          vertical: 0,
-        ),
+        contentPadding: const EdgeInsets.symmetric(vertical: 0),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5),
-          borderSide: const BorderSide(
-            color: Color(0xffc8cfdb),
-          ),
+          borderSide: const BorderSide(color: Color(0xffc8cfdb)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5),
-          borderSide: const BorderSide(
-            color: Color(0xffc8cfdb),
-          ),
+          borderSide: const BorderSide(color: Color(0xffc8cfdb)),
         ),
       ),
     );
@@ -675,13 +611,9 @@ class _Divider extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Row(
       children: [
-        Expanded(
-          child: Divider(),
-        ),
+        Expanded(child: Divider()),
         Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: 12,
-          ),
+          padding: EdgeInsets.symmetric(horizontal: 12),
           child: Text(
             'OR CONTINUE WITH',
             style: TextStyle(
@@ -692,9 +624,7 @@ class _Divider extends StatelessWidget {
             ),
           ),
         ),
-        Expanded(
-          child: Divider(),
-        ),
+        Expanded(child: Divider()),
       ],
     );
   }
@@ -728,11 +658,7 @@ class _SocialButtons extends StatelessWidget {
         Expanded(
           child: _Social(
             label: 'Apple',
-            child: Icon(
-              Icons.apple,
-              size: 16,
-              color: Colors.black,
-            ),
+            child: Icon(Icons.apple, size: 16, color: Colors.black),
           ),
         ),
       ],
@@ -745,10 +671,7 @@ class _SocialButtons extends StatelessWidget {
 // ================================================================
 
 class _Social extends StatelessWidget {
-  const _Social({
-    required this.label,
-    required this.child,
-  });
+  const _Social({required this.label, required this.child});
 
   final String label;
   final Widget child;
@@ -760,12 +683,8 @@ class _Social extends StatelessWidget {
       child: OutlinedButton(
         onPressed: () {},
         style: OutlinedButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
-          ),
-          side: const BorderSide(
-            color: Color(0xffc8cfdb),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+          side: const BorderSide(color: Color(0xffc8cfdb)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -774,10 +693,7 @@ class _Social extends StatelessWidget {
             const SizedBox(width: 7),
             Text(
               label,
-              style: const TextStyle(
-                color: Color(0xff27364a),
-                fontSize: 10,
-              ),
+              style: const TextStyle(color: Color(0xff27364a), fontSize: 10),
             ),
           ],
         ),
