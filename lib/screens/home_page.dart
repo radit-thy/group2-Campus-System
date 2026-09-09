@@ -1,15 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../../services/item_service.dart';
-import '../../theme/app_theme.dart';
-import '../report/report_item_screen.dart';
-import '../items/lost_screen.dart';
-import '../items/found_screen.dart';
-import '../items/item_details_screen.dart';
-import '../items/my_items_screen.dart';
-import '../profile/profile_screen.dart';
-import '../../widgets/bottom_nav_bar.dart';
+import '../services/item_service.dart';
+import '../theme/app_theme.dart';
+import 'report/report_item_screen.dart';
+import 'items/lost_screen.dart';
+import 'items/found_screen.dart';
+import 'items/item_details_screen.dart';
+import 'items/my_item_screen.dart';
+import 'profile/profile_screen.dart';
+import '../widgets/bottom_nav_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -445,7 +445,7 @@ class _HomeDashboardState
 
         const SizedBox(height: 12),
 
-        StreamBuilder<QuerySnapshot>(
+        StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
           stream: ItemService().getFoundItems(),
 
           builder: (context, snapshot) {
@@ -484,10 +484,9 @@ class _HomeDashboardState
 
   Widget _itemCard(
     BuildContext context,
-    QueryDocumentSnapshot doc,
+    QueryDocumentSnapshot<Map<String, dynamic>> doc,
   ) {
-    final data =
-        doc.data() as Map<String, dynamic>;
+    final data = doc.data();
 
     final imageUrl =
         data['imageUrl'] ?? '';

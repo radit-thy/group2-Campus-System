@@ -27,7 +27,7 @@ class MyItemsScreen extends StatelessWidget {
         title: const Text('My Items'),
       ),
 
-      body: StreamBuilder<QuerySnapshot>(
+      body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream:
             ItemService().getMyItems(
           user.uid,
@@ -59,10 +59,7 @@ class MyItemsScreen extends StatelessWidget {
                 snapshot.data!.docs.length,
 
             itemBuilder: (context, index) {
-              final data =
-                  snapshot.data!.docs[index]
-                      .data()
-                      as Map<String, dynamic>;
+              final data = snapshot.data!.docs[index].data();
 
               return Card(
                 child: ListTile(

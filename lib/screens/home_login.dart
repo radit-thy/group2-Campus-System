@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'register.dart';
-import 'dashboard.dart';
+import 'home_page.dart';
 
 class HomeLogin extends StatefulWidget {
   const HomeLogin({super.key});
@@ -69,7 +69,7 @@ class _HomeLoginState extends State<HomeLogin> {
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const DashboardPage()),
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
       );
     } on FirebaseAuthException catch (e) {
       if (!mounted) return;

@@ -64,8 +64,19 @@ class ItemService {
   }
 
   Future<void> claimItem(String itemId) async {
-    await _items.doc(itemId).update({
-      'status': 'claimed',
+    final item = _items.doc(itemId);
+
+    await _firestore.runTransaction((transaction) async {
+      final snapshot = await transaction.get(item);
+      final data = snapshot.data();
+      if (!snapshot.exists || data?['status'] != 'available') {
+        throw StateError('This item has already been claimed or removed.');
+      }
+
+      transaction.update(item, {
+        'status': 'claimed',
+        'claimedAt': FieldValue.serverTimestamp(),
+      });
     });
   }
 }

@@ -15,7 +15,7 @@ class LostScreen extends StatelessWidget {
         title: const Text('Lost Items'),
       ),
 
-      body: StreamBuilder<QuerySnapshot>(
+      body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: ItemService().getLostItems(),
 
         builder: (context, snapshot) {
@@ -43,10 +43,7 @@ class LostScreen extends StatelessWidget {
                 snapshot.data!.docs.length,
 
             itemBuilder: (context, index) {
-              final data =
-                  snapshot.data!.docs[index]
-                      .data()
-                      as Map<String, dynamic>;
+              final data = snapshot.data!.docs[index].data();
 
               return Card(
                 margin:

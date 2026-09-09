@@ -15,7 +15,7 @@ class FoundScreen extends StatelessWidget {
         title: const Text('Found Items'),
       ),
 
-      body: StreamBuilder<QuerySnapshot>(
+      body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: ItemService().getFoundItems(),
 
         builder: (context, snapshot) {
@@ -42,7 +42,7 @@ class FoundScreen extends StatelessWidget {
 
             itemBuilder: (context, index) {
               final doc = snapshot.data!.docs[index];
-              final data = doc.data() as Map<String, dynamic>;
+              final data = doc.data();
 
               return Card(
                 margin: const EdgeInsets.only(bottom: 12),

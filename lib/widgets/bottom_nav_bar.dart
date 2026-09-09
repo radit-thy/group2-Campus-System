@@ -3,7 +3,7 @@ import '../theme/app_theme.dart';
 
 class BottomNavBar extends StatelessWidget {
   final int currentIndex;
-  final Function(int) onTap;
+  final ValueChanged<int> onTap;
 
   const BottomNavBar({
     super.key,
