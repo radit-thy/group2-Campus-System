@@ -14,15 +14,22 @@ class SectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    final textColor = isDark
+        ? Colors.white
+        : AppTheme.navy;
+
     return Row(
       children: [
         Expanded(
           child: Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: AppTheme.navy,
+              color: textColor,
             ),
           ),
         ),
@@ -32,8 +39,10 @@ class SectionTitle extends StatelessWidget {
             onPressed: () {},
             child: Text(
               actionText!,
-              style: const TextStyle(
-                color: AppTheme.navy,
+              style: TextStyle(
+                color: isDark
+                    ? AppTheme.orange
+                    : AppTheme.navy,
                 fontWeight: FontWeight.bold,
               ),
             ),

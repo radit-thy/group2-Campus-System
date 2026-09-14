@@ -32,7 +32,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(index: currentIndex, children: pages),
+      body: IndexedStack(
+        index: currentIndex,
+        children: pages,
+      ),
 
       floatingActionButton: currentIndex == 0
           ? FloatingActionButton(
@@ -41,7 +44,9 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => const ReportItemScreen()),
+                  MaterialPageRoute(
+                    builder: (_) => const ReportItemScreen(),
+                  ),
                 );
               },
               child: const Icon(Icons.add),
@@ -80,23 +85,29 @@ class _HomeDashboardState extends State<HomeDashboard> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return SafeArea(
       child: CustomScrollView(
         slivers: [
           SliverAppBar(
             pinned: true,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            backgroundColor: theme.scaffoldBackgroundColor,
 
             title: Row(
               children: [
-                const Icon(Icons.school_outlined, color: AppTheme.navy),
+                Icon(
+                  Icons.school_outlined,
+                  color: isDark ? Colors.white : AppTheme.navy,
+                ),
 
                 const SizedBox(width: 8),
 
-                const Text(
+                Text(
                   'Campus Found',
                   style: TextStyle(
-                    color: AppTheme.navy,
+                    color: isDark ? Colors.white : AppTheme.navy,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -105,8 +116,13 @@ class _HomeDashboardState extends State<HomeDashboard> {
 
             actions: [
               CircleAvatar(
-                backgroundColor: AppTheme.lightBlue,
-                child: Icon(Icons.person, color: AppTheme.navy),
+                backgroundColor: isDark
+                    ? AppTheme.orange.withOpacity(0.15)
+                    : AppTheme.lightBlue,
+                child: Icon(
+                  Icons.person,
+                  color: isDark ? AppTheme.orange : AppTheme.navy,
+                ),
               ),
 
               const SizedBox(width: 16),
@@ -193,18 +209,25 @@ class _HomeDashboardState extends State<HomeDashboard> {
   }
 
   Widget _buildQuickActions(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Row(
       children: [
         Expanded(
           child: _actionCard(
             title: 'REPORT LOST',
             icon: Icons.person_search,
-            color: AppTheme.orange,
+            color: isDark
+                ? AppTheme.orange.withOpacity(0.85)
+                : AppTheme.orange,
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => const ReportItemScreen(initialType: 'lost'),
+                  builder: (_) => const ReportItemScreen(
+                    initialType: 'lost',
+                  ),
                 ),
               );
             },
@@ -217,12 +240,16 @@ class _HomeDashboardState extends State<HomeDashboard> {
           child: _actionCard(
             title: 'REPORT FOUND',
             icon: Icons.inventory_2_outlined,
-            color: AppTheme.lightBlue,
+            color: isDark
+                ? const Color(0xFF1E5A82)
+                : AppTheme.lightBlue,
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => const ReportItemScreen(initialType: 'found'),
+                  builder: (_) => const ReportItemScreen(
+                    initialType: 'found',
+                  ),
                 ),
               );
             },
@@ -238,6 +265,9 @@ class _HomeDashboardState extends State<HomeDashboard> {
     required Color color,
     required VoidCallback onTap,
   }) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return GestureDetector(
       onTap: onTap,
 
@@ -247,7 +277,11 @@ class _HomeDashboardState extends State<HomeDashboard> {
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppTheme.border),
+          border: Border.all(
+            color: isDark
+                ? Colors.white.withOpacity(0.08)
+                : AppTheme.border,
+          ),
         ),
 
         child: Column(
@@ -255,18 +289,21 @@ class _HomeDashboardState extends State<HomeDashboard> {
             CircleAvatar(
               radius: 24,
               backgroundColor: AppTheme.navy,
-              child: Icon(icon, color: Colors.white),
+              child: Icon(
+                icon,
+                color: Colors.white,
+              ),
             ),
 
             const SizedBox(height: 12),
 
             Text(
               title,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
                 letterSpacing: .5,
-                color: AppTheme.navy,
+                color: isDark ? Colors.white : AppTheme.navy,
               ),
             ),
           ],
@@ -276,6 +313,9 @@ class _HomeDashboardState extends State<HomeDashboard> {
   }
 
   Widget _buildCategories(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     final categories = [
       {'name': 'Electronics', 'icon': Icons.devices_other},
       {'name': 'Keys', 'icon': Icons.key},
@@ -292,16 +332,26 @@ class _HomeDashboardState extends State<HomeDashboard> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
           children: [
-            const Text(
+            Text(
               'Browse Categories',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: AppTheme.navy,
+                color: isDark ? Colors.white : AppTheme.navy,
               ),
             ),
 
-            TextButton(onPressed: () {}, child: const Text('View All')),
+            TextButton(
+              onPressed: () {},
+              child: Text(
+                'View All',
+                style: TextStyle(
+                  color: isDark
+                      ? AppTheme.orange
+                      : AppTheme.navy,
+                ),
+              ),
+            ),
           ],
         ),
 
@@ -330,14 +380,22 @@ class _HomeDashboardState extends State<HomeDashboard> {
                       height: 64,
 
                       decoration: BoxDecoration(
-                        color: AppTheme.iconBlue,
+                        color: isDark
+                            ? AppTheme.navy.withOpacity(0.7)
+                            : AppTheme.iconBlue,
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: AppTheme.border),
+                        border: Border.all(
+                          color: isDark
+                              ? Colors.white.withOpacity(0.08)
+                              : AppTheme.border,
+                        ),
                       ),
 
                       child: Icon(
                         category['icon'] as IconData,
-                        color: AppTheme.navy,
+                        color: isDark
+                            ? AppTheme.orange
+                            : AppTheme.navy,
                       ),
                     ),
 
@@ -347,9 +405,10 @@ class _HomeDashboardState extends State<HomeDashboard> {
                       category['name'] as String,
                       overflow: TextOverflow.ellipsis,
 
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
+                        color: theme.colorScheme.onSurface,
                       ),
                     ),
                   ],
@@ -363,16 +422,19 @@ class _HomeDashboardState extends State<HomeDashboard> {
   }
 
   Widget _buildRecentlyFound(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
 
       children: [
-        const Text(
+        Text(
           'Recently Found',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: AppTheme.navy,
+            color: isDark ? Colors.white : AppTheme.navy,
           ),
         ),
 
@@ -383,11 +445,13 @@ class _HomeDashboardState extends State<HomeDashboard> {
 
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
             }
 
             if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-              return _emptyItems();
+              return _emptyItems(context);
             }
 
             final docs = snapshot.data!.docs;
@@ -395,7 +459,9 @@ class _HomeDashboardState extends State<HomeDashboard> {
             return Column(
               children: docs
                   .take(4)
-                  .map((doc) => _itemCard(context, doc))
+                  .map(
+                    (doc) => _itemCard(context, doc),
+                  )
                   .toList(),
             );
           },
@@ -408,27 +474,45 @@ class _HomeDashboardState extends State<HomeDashboard> {
     BuildContext context,
     QueryDocumentSnapshot<Map<String, dynamic>> doc,
   ) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     final data = doc.data();
 
     final imageUrl = data['imageUrl'] ?? '';
 
     return InkWell(
       borderRadius: BorderRadius.circular(12),
+
       onTap: () => Navigator.push(
         context,
-        MaterialPageRoute(builder: (_) => ItemDetailsScreen(itemId: doc.id)),
+        MaterialPageRoute(
+          builder: (_) => ItemDetailsScreen(
+            itemId: doc.id,
+          ),
+        ),
       ),
+
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
 
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: theme.colorScheme.surface,
           borderRadius: BorderRadius.circular(12),
 
-          border: Border.all(color: AppTheme.border),
+          border: Border.all(
+            color: isDark
+                ? Colors.white.withOpacity(0.08)
+                : AppTheme.border,
+          ),
 
-          boxShadow: const [
-            BoxShadow(blurRadius: 4, color: Color.fromRGBO(0, 0, 0, .08)),
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 4,
+              color: Colors.black.withOpacity(
+                isDark ? 0.25 : 0.08,
+              ),
+            ),
           ],
         ),
 
@@ -464,10 +548,13 @@ class _HomeDashboardState extends State<HomeDashboard> {
                       Expanded(
                         child: Text(
                           data['title'] ?? 'Unknown item',
-                          style: const TextStyle(
+
+                          style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
-                            color: AppTheme.navy,
+                            color: isDark
+                                ? Colors.white
+                                : AppTheme.navy,
                           ),
                         ),
                       ),
@@ -483,11 +570,12 @@ class _HomeDashboardState extends State<HomeDashboard> {
                           borderRadius: BorderRadius.circular(999),
                         ),
 
-                        child: const Text(
+                        child: Text(
                           'NEW MATCH',
                           style: TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
+                            color: AppTheme.navy,
                           ),
                         ),
                       ),
@@ -498,11 +586,22 @@ class _HomeDashboardState extends State<HomeDashboard> {
 
                   Row(
                     children: [
-                      const Icon(Icons.location_on_outlined, size: 16),
+                      Icon(
+                        Icons.location_on_outlined,
+                        size: 16,
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
 
                       const SizedBox(width: 4),
 
-                      Expanded(child: Text(data['location'] ?? '')),
+                      Expanded(
+                        child: Text(
+                          data['location'] ?? '',
+                          style: TextStyle(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
 
@@ -518,7 +617,9 @@ class _HomeDashboardState extends State<HomeDashboard> {
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content: Text('Item claimed successfully'),
+                              content: Text(
+                                'Item claimed successfully',
+                              ),
                             ),
                           );
                         }
@@ -527,6 +628,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.navy,
                         foregroundColor: Colors.white,
+
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -544,56 +646,91 @@ class _HomeDashboardState extends State<HomeDashboard> {
     );
   }
 
-  Widget _emptyItems() {
+  Widget _emptyItems(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       width: double.infinity,
 
       padding: const EdgeInsets.all(32),
 
       decoration: BoxDecoration(
-        color: AppTheme.paleBlue,
+        color: isDark
+            ? AppTheme.navy.withOpacity(0.5)
+            : AppTheme.paleBlue,
         borderRadius: BorderRadius.circular(12),
       ),
 
-      child: const Column(
+      child: Column(
         children: [
-          Icon(Icons.search_off, size: 40, color: AppTheme.navy),
+          Icon(
+            Icons.search_off,
+            size: 40,
+            color: isDark
+                ? AppTheme.orange
+                : AppTheme.navy,
+          ),
 
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
 
-          Text('No items found yet.'),
+          Text(
+            'No items found yet.',
+            style: TextStyle(
+              color: theme.colorScheme.onSurface,
+            ),
+          ),
         ],
       ),
     );
   }
 
   Widget _buildStatistics(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 24),
 
       decoration: BoxDecoration(
-        color: AppTheme.paleBlue,
+        color: isDark
+            ? const Color(0xFF1E293B)
+            : AppTheme.paleBlue,
         borderRadius: BorderRadius.circular(12),
 
-        border: Border.all(color: AppTheme.border),
+        border: Border.all(
+          color: isDark
+              ? Colors.white.withOpacity(0.08)
+              : AppTheme.border,
+        ),
       ),
 
-      child: const Row(
+      child: Row(
         children: [
           Expanded(
-            child: _Stat(value: '124', label: 'Items Lost'),
+            child: _Stat(
+              value: '124',
+              label: 'Items Lost',
+            ),
           ),
 
           _Divider(),
 
           Expanded(
-            child: _Stat(value: '86', label: 'Items Found', orange: true),
+            child: _Stat(
+              value: '86',
+              label: 'Items Found',
+              orange: true,
+            ),
           ),
 
           _Divider(),
 
           Expanded(
-            child: _Stat(value: '92%', label: 'Return Rate'),
+            child: _Stat(
+              value: '92%',
+              label: 'Return Rate',
+            ),
           ),
         ],
       ),
@@ -606,10 +743,17 @@ class _Stat extends StatelessWidget {
   final String label;
   final bool orange;
 
-  const _Stat({required this.value, required this.label, this.orange = false});
+  const _Stat({
+    required this.value,
+    required this.label,
+    this.orange = false,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Column(
       children: [
         Text(
@@ -617,7 +761,11 @@ class _Stat extends StatelessWidget {
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: orange ? const Color(0xFF875200) : AppTheme.navy,
+            color: orange
+                ? AppTheme.orange
+                : isDark
+                    ? Colors.white
+                    : AppTheme.navy,
           ),
         ),
 
@@ -625,7 +773,11 @@ class _Stat extends StatelessWidget {
 
         Text(
           label,
-          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
         ),
       ],
     );
@@ -637,6 +789,15 @@ class _Divider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(height: 40, width: 1, color: AppTheme.border);
+    final isDark =
+        Theme.of(context).brightness == Brightness.dark;
+
+    return Container(
+      height: 40,
+      width: 1,
+      color: isDark
+          ? Colors.white.withOpacity(0.12)
+          : AppTheme.border,
+    );
   }
 }

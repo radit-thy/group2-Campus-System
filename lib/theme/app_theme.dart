@@ -67,49 +67,62 @@ class AppTheme {
   );
 
   static ThemeData darkTheme = ThemeData(
+  brightness: Brightness.dark,
+  useMaterial3: true,
+
+  scaffoldBackgroundColor: const Color(0xFF0F172A),
+
+  colorScheme: ColorScheme.fromSeed(
+    seedColor: navy,
     brightness: Brightness.dark,
-    useMaterial3: true,
+    primary: navy,
+    secondary: orange,
+    surface: const Color(0xFF1E293B),
+  ),
 
-    scaffoldBackgroundColor: const Color(0xFF030405),
+  fontFamily: 'Inter',
 
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: orange,
-      brightness: Brightness.dark,
-      primary: orange,
-      secondary: navy,
-    ),
+  appBarTheme: const AppBarTheme(
+    backgroundColor: Color(0xFF0F172A),
+    foregroundColor: Colors.white,
+    elevation: 0,
+  ),
 
-    fontFamily: 'Inter',
-    
+  inputDecorationTheme: const InputDecorationTheme(
+    filled: true,
+    fillColor: Color(0xFF1E293B),
 
-    appBarTheme: const AppBarTheme(
-      backgroundColor: Color(0xFF101820),
-      foregroundColor: Colors.white,
-      elevation: 0,
-    ),
-
-    inputDecorationTheme: InputDecorationTheme(
-      filled: true,
-      fillColor: Color(0xFF0E141A),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(999)),
-        borderSide: BorderSide(
-          color: border,
-        ),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.all(
+        Radius.circular(999),
       ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(999)),
-        borderSide: BorderSide(
-          color: border,
-        ),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(999)),
-        borderSide: BorderSide(
-          color: navy,
-          width: 1.5,
-        ),
+      borderSide: BorderSide(
+        color: Color(0xFF334155),
       ),
     ),
-  );
+
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.all(
+        Radius.circular(999),
+      ),
+      borderSide: BorderSide(
+        color: Color(0xFF334155),
+      ),
+    ),
+
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.all(
+        Radius.circular(999),
+      ),
+      borderSide: BorderSide(
+        color: navy,
+        width: 1.5,
+      ),
+    ),
+
+    hintStyle: TextStyle(
+      color: Color(0xFF94A3B8),
+    ),
+  ),
+);
 }

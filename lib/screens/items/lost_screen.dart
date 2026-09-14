@@ -10,10 +10,75 @@ class LostScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lost Items'),
+      automaticallyImplyLeading: false,
+      titleSpacing: 20,
+      toolbarHeight: 65,
+      title: Row(
+        children: [
+          Icon(
+            Icons.school_outlined,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : AppTheme.navy,
+            size: 23,
+          ),
+
+          const SizedBox(width: 8),
+
+          Text(
+            'Campus Found',
+            style: TextStyle(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : AppTheme.navy,
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+
+          const Spacer(),
+
+          CircleAvatar(
+            radius: 17,
+            backgroundColor:
+                Theme.of(context).brightness == Brightness.dark
+                    ? AppTheme.orange.withOpacity(0.15)
+                    : AppTheme.lightBlue,
+            child: Icon(
+              Icons.person,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppTheme.orange
+                  : AppTheme.navy,
+            ),
+          ),
+        ],
       ),
+      bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(55),
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Lost Items',
+                style: TextStyle(
+                  color: isDark ? Colors.white : AppTheme.navy,
+                  fontSize: 23,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
 
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: ItemService().getLostItems(),
@@ -37,8 +102,8 @@ class LostScreen extends StatelessWidget {
 
           return ListView.builder(
             padding:
-                const EdgeInsets.all(16),
-
+                const EdgeInsets.all(16),  
+                          
             itemCount:
                 snapshot.data!.docs.length,
 

@@ -14,17 +14,38 @@ class CategoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    final cardColor = isDark
+        ? const Color(0xFF1E293B)
+        : Colors.white;
+
+    final iconColor = isDark
+        ? AppTheme.orange
+        : AppTheme.navy;
+
+    final iconBackground = isDark
+        ? AppTheme.orange.withOpacity(0.12)
+        : AppTheme.navy.withOpacity(0.1);
+
+    final textColor = isDark
+        ? Colors.white
+        : Colors.black87;
+
     return Container(
       width: 90,
       margin: const EdgeInsets.only(right: 12),
 
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cardColor,
         borderRadius: BorderRadius.circular(16),
 
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: isDark
+                ? Colors.black.withOpacity(0.25)
+                : Colors.black.withOpacity(0.05),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
@@ -39,13 +60,13 @@ class CategoryCard extends StatelessWidget {
             padding: const EdgeInsets.all(10),
 
             decoration: BoxDecoration(
-              color: AppTheme.navy.withOpacity(0.1),
+              color: iconBackground,
               shape: BoxShape.circle,
             ),
 
             child: Icon(
               icon,
-              color: AppTheme.navy,
+              color: iconColor,
             ),
           ),
 
@@ -54,9 +75,10 @@ class CategoryCard extends StatelessWidget {
           Text(
             title,
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
+              color: textColor,
             ),
           ),
         ],
