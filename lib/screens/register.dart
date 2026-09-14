@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../services/auth_service.dart';
+
 class RegisterForm extends StatefulWidget {
-  const RegisterForm({
-    super.key,
-    required this.onRegisterSuccess,
-  });
+  const RegisterForm({super.key, required this.onRegisterSuccess});
 
   final VoidCallback onRegisterSuccess;
 
@@ -18,14 +17,11 @@ class _RegisterFormState extends State<RegisterForm> {
   // CONTROLLERS
   // ============================================================
 
-  final TextEditingController fullNameController =
-      TextEditingController();
+  final TextEditingController fullNameController = TextEditingController();
 
-  final TextEditingController emailController =
-      TextEditingController();
+  final TextEditingController emailController = TextEditingController();
 
-  final TextEditingController passwordController =
-      TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   // ============================================================
   // STATE
@@ -57,42 +53,27 @@ class _RegisterFormState extends State<RegisterForm> {
     // ------------------------------------------------------------
 
     if (fullName.isEmpty) {
-      _showMessage(
-        'Please enter your full name.',
-        isError: true,
-      );
+      _showMessage('Please enter your full name.', isError: true);
       return;
     }
 
     if (email.isEmpty) {
-      _showMessage(
-        'Please enter your university email.',
-        isError: true,
-      );
+      _showMessage('Please enter your university email.', isError: true);
       return;
     }
 
     if (!email.contains('@')) {
-      _showMessage(
-        'Please enter a valid email address.',
-        isError: true,
-      );
+      _showMessage('Please enter a valid email address.', isError: true);
       return;
     }
 
     if (password.isEmpty) {
-      _showMessage(
-        'Please create a password.',
-        isError: true,
-      );
+      _showMessage('Please create a password.', isError: true);
       return;
     }
 
     if (password.length < 6) {
-      _showMessage(
-        'Password must be at least 6 characters.',
-        isError: true,
-      );
+      _showMessage('Password must be at least 6 characters.', isError: true);
       return;
     }
 
@@ -105,15 +86,15 @@ class _RegisterFormState extends State<RegisterForm> {
     });
 
     try {
+      AuthService().beginRegistration();
+
       // ----------------------------------------------------------
       // CREATE FIREBASE ACCOUNT
       // ----------------------------------------------------------
 
-      final UserCredential userCredential =
-          await FirebaseAuth.instance
-              .createUserWithEmailAndPassword(
-        email: email,
-        password: password,
+      final UserCredential userCredential = await AuthService().register(
+        email,
+        password,
       );
 
       // ----------------------------------------------------------
@@ -139,7 +120,7 @@ class _RegisterFormState extends State<RegisterForm> {
       // Dashboard
       // ----------------------------------------------------------
 
-      await FirebaseAuth.instance.signOut();
+      await AuthService().logout();
 
       if (!mounted) return;
 
@@ -163,52 +144,41 @@ class _RegisterFormState extends State<RegisterForm> {
 
       switch (e.code) {
         case 'email-already-in-use':
-          message =
-              'An account already exists with this email.';
+          message = 'An account already exists with this email.';
           break;
 
         case 'invalid-email':
-          message =
-              'Please enter a valid email address.';
+          message = 'Please enter a valid email address.';
           break;
 
         case 'weak-password':
-          message =
-              'Password is too weak. Use at least 6 characters.';
+          message = 'Password is too weak. Use at least 6 characters.';
           break;
 
         case 'operation-not-allowed':
-          message =
-              'Email/password registration is not enabled in Firebase.';
+          message = 'Email/password registration is not enabled in Firebase.';
           break;
 
         case 'network-request-failed':
-          message =
-              'Network error. Please check your internet connection.';
+          message = 'Network error. Please check your internet connection.';
           break;
 
         case 'too-many-requests':
-          message =
-              'Too many requests. Please try again later.';
+          message = 'Too many requests. Please try again later.';
           break;
 
         default:
-          message =
-              e.message ?? 'Registration failed. Please try again.';
+          message = e.message ?? 'Registration failed. Please try again.';
       }
 
-      _showMessage(
-        message,
-        isError: true,
-      );
+      _showMessage(message, isError: true);
     } catch (e) {
       if (!mounted) return;
 
-      _showMessage(
-        'Something went wrong. Please try again.',
-        isError: true,
-      );
+      _showMessage('Something went wrong. Please try again.', isError: true);
     } finally {
+      AuthService().finishRegistration();
+
       if (mounted) {
         setState(() {
           isLoading = false;
@@ -221,10 +191,7 @@ class _RegisterFormState extends State<RegisterForm> {
   // SHOW MESSAGE
   // ============================================================
 
-  void _showMessage(
-    String message, {
-    required bool isError,
-  }) {
+  void _showMessage(String message, {required bool isError}) {
     if (!mounted) return;
 
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -232,9 +199,7 @@ class _RegisterFormState extends State<RegisterForm> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: isError
-            ? Colors.red
-            : Colors.green,
+        backgroundColor: isError ? Colors.red : Colors.green,
       ),
     );
   }
@@ -261,10 +226,7 @@ class _RegisterFormState extends State<RegisterForm> {
 
         const Text(
           'Join your university campus network.',
-          style: TextStyle(
-            fontSize: 11,
-            color: Color(0xff4b5563),
-          ),
+          style: TextStyle(fontSize: 11, color: Color(0xff4b5563)),
         ),
 
         const SizedBox(height: 20),
@@ -272,7 +234,6 @@ class _RegisterFormState extends State<RegisterForm> {
         // ========================================================
         // FULL NAME
         // ========================================================
-
         const _RegisterLabel('FULL NAME'),
 
         const SizedBox(height: 5),
@@ -289,7 +250,6 @@ class _RegisterFormState extends State<RegisterForm> {
         // ========================================================
         // UNIVERSITY EMAIL
         // ========================================================
-
         const _RegisterLabel('UNIVERSITY EMAIL'),
 
         const SizedBox(height: 5),
@@ -306,7 +266,6 @@ class _RegisterFormState extends State<RegisterForm> {
         // ========================================================
         // PASSWORD
         // ========================================================
-
         const _RegisterLabel('PASSWORD'),
 
         const SizedBox(height: 5),
@@ -325,8 +284,7 @@ class _RegisterFormState extends State<RegisterForm> {
             ),
             onPressed: () {
               setState(() {
-                obscurePassword =
-                    !obscurePassword;
+                obscurePassword = !obscurePassword;
               });
             },
           ),
@@ -337,7 +295,6 @@ class _RegisterFormState extends State<RegisterForm> {
         // ========================================================
         // CREATE ACCOUNT BUTTON
         // ========================================================
-
         SizedBox(
           width: double.infinity,
           height: 42,
@@ -346,8 +303,7 @@ class _RegisterFormState extends State<RegisterForm> {
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xff062b55),
               foregroundColor: Colors.white,
-              disabledBackgroundColor:
-                  const Color(0xff8a9aaa),
+              disabledBackgroundColor: const Color(0xff8a9aaa),
               elevation: 0,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5),
@@ -364,10 +320,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   )
                 : const Text(
                     'Create Account',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
                   ),
           ),
         ),
@@ -378,10 +331,7 @@ class _RegisterFormState extends State<RegisterForm> {
           child: Text(
             'By signing up, you agree to the Terms of Service.',
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 9,
-              color: Color(0xff6b7280),
-            ),
+            style: TextStyle(fontSize: 9, color: Color(0xff6b7280)),
           ),
         ),
       ],
@@ -439,44 +389,26 @@ class _RegisterInput extends StatelessWidget {
       controller: controller,
       obscureText: obscure,
       keyboardType: keyboardType,
-      style: const TextStyle(
-        fontSize: 12,
-      ),
+      style: const TextStyle(fontSize: 12),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: const TextStyle(
-          fontSize: 11,
-          color: Color(0xff788190),
-        ),
-        prefixIcon: Icon(
-          icon,
-          size: 17,
-          color: const Color(0xff4c5767),
-        ),
+        hintStyle: const TextStyle(fontSize: 11, color: Color(0xff788190)),
+        prefixIcon: Icon(icon, size: 17, color: const Color(0xff4c5767)),
         suffixIcon: suffix,
         filled: true,
         fillColor: const Color(0xfff0f4fe),
-        contentPadding: const EdgeInsets.symmetric(
-          vertical: 0,
-        ),
+        contentPadding: const EdgeInsets.symmetric(vertical: 0),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5),
-          borderSide: const BorderSide(
-            color: Color(0xffc8cfdb),
-          ),
+          borderSide: const BorderSide(color: Color(0xffc8cfdb)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5),
-          borderSide: const BorderSide(
-            color: Color(0xffc8cfdb),
-          ),
+          borderSide: const BorderSide(color: Color(0xffc8cfdb)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5),
-          borderSide: const BorderSide(
-            color: Color(0xff062b55),
-            width: 1.2,
-          ),
+          borderSide: const BorderSide(color: Color(0xff062b55), width: 1.2),
         ),
       ),
     );

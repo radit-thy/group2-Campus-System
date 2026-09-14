@@ -15,8 +15,7 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() =>
-      _HomeScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -33,10 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: currentIndex,
-        children: pages,
-      ),
+      body: IndexedStack(index: currentIndex, children: pages),
 
       floatingActionButton: currentIndex == 0
           ? FloatingActionButton(
@@ -45,15 +41,10 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) =>
-                        const ReportItemScreen(),
-                  ),
+                  MaterialPageRoute(builder: (_) => const ReportItemScreen()),
                 );
               },
-              child: const Icon(
-                Icons.add,
-              ),
+              child: const Icon(Icons.add),
             )
           : null,
 
@@ -73,12 +64,10 @@ class HomeDashboard extends StatefulWidget {
   const HomeDashboard({super.key});
 
   @override
-  State<HomeDashboard> createState() =>
-      _HomeDashboardState();
+  State<HomeDashboard> createState() => _HomeDashboardState();
 }
 
-class _HomeDashboardState
-    extends State<HomeDashboard> {
+class _HomeDashboardState extends State<HomeDashboard> {
   final searchController = TextEditingController();
 
   String search = '';
@@ -96,15 +85,11 @@ class _HomeDashboardState
         slivers: [
           SliverAppBar(
             pinned: true,
-            backgroundColor:
-                Theme.of(context).scaffoldBackgroundColor,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
 
             title: Row(
               children: [
-                const Icon(
-                  Icons.school_outlined,
-                  color: AppTheme.navy,
-                ),
+                const Icon(Icons.school_outlined, color: AppTheme.navy),
 
                 const SizedBox(width: 8),
 
@@ -121,10 +106,7 @@ class _HomeDashboardState
             actions: [
               CircleAvatar(
                 backgroundColor: AppTheme.lightBlue,
-                child: Icon(
-                  Icons.person,
-                  color: AppTheme.navy,
-                ),
+                child: Icon(Icons.person, color: AppTheme.navy),
               ),
 
               const SizedBox(width: 16),
@@ -134,29 +116,27 @@ class _HomeDashboardState
           SliverPadding(
             padding: const EdgeInsets.all(20),
             sliver: SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  _buildHeroSearch(context),
+              delegate: SliverChildListDelegate([
+                _buildHeroSearch(context),
 
-                  const SizedBox(height: 16),
+                const SizedBox(height: 16),
 
-                  _buildQuickActions(context),
+                _buildQuickActions(context),
 
-                  const SizedBox(height: 16),
+                const SizedBox(height: 16),
 
-                  _buildCategories(context),
+                _buildCategories(context),
 
-                  const SizedBox(height: 16),
+                const SizedBox(height: 16),
 
-                  _buildRecentlyFound(context),
+                _buildRecentlyFound(context),
 
-                  const SizedBox(height: 16),
+                const SizedBox(height: 16),
 
-                  _buildStatistics(context),
+                _buildStatistics(context),
 
-                  const SizedBox(height: 100),
-                ],
-              ),
+                const SizedBox(height: 100),
+              ]),
             ),
           ),
         ],
@@ -174,8 +154,7 @@ class _HomeDashboardState
       ),
 
       child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
 
         children: [
           const Text(
@@ -200,13 +179,9 @@ class _HomeDashboardState
             },
 
             decoration: const InputDecoration(
-              hintText:
-                  'Search for keys, phones, or wallets...',
-              prefixIcon: Icon(
-                Icons.search,
-              ),
-              contentPadding:
-                  EdgeInsets.symmetric(
+              hintText: 'Search for keys, phones, or wallets...',
+              prefixIcon: Icon(Icons.search),
+              contentPadding: EdgeInsets.symmetric(
                 vertical: 12,
                 horizontal: 16,
               ),
@@ -229,10 +204,7 @@ class _HomeDashboardState
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) =>
-                      const ReportItemScreen(
-                    initialType: 'lost',
-                  ),
+                  builder: (_) => const ReportItemScreen(initialType: 'lost'),
                 ),
               );
             },
@@ -250,10 +222,7 @@ class _HomeDashboardState
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) =>
-                      const ReportItemScreen(
-                    initialType: 'found',
-                  ),
+                  builder: (_) => const ReportItemScreen(initialType: 'found'),
                 ),
               );
             },
@@ -273,16 +242,12 @@ class _HomeDashboardState
       onTap: onTap,
 
       child: Container(
-        padding: const EdgeInsets.symmetric(
-          vertical: 24,
-        ),
+        padding: const EdgeInsets.symmetric(vertical: 24),
 
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: AppTheme.border,
-          ),
+          border: Border.all(color: AppTheme.border),
         ),
 
         child: Column(
@@ -290,10 +255,7 @@ class _HomeDashboardState
             CircleAvatar(
               radius: 24,
               backgroundColor: AppTheme.navy,
-              child: Icon(
-                icon,
-                color: Colors.white,
-              ),
+              child: Icon(icon, color: Colors.white),
             ),
 
             const SizedBox(height: 12),
@@ -315,36 +277,19 @@ class _HomeDashboardState
 
   Widget _buildCategories(BuildContext context) {
     final categories = [
-      {
-        'name': 'Electronics',
-        'icon': Icons.devices_other,
-      },
-      {
-        'name': 'Keys',
-        'icon': Icons.key,
-      },
-      {
-        'name': 'Wallet',
-        'icon': Icons.account_balance_wallet,
-      },
-      {
-        'name': 'Books',
-        'icon': Icons.book,
-      },
-      {
-        'name': 'ID Cards',
-        'icon': Icons.badge,
-      },
+      {'name': 'Electronics', 'icon': Icons.devices_other},
+      {'name': 'Keys', 'icon': Icons.key},
+      {'name': 'Wallet', 'icon': Icons.account_balance_wallet},
+      {'name': 'Books', 'icon': Icons.book},
+      {'name': 'ID Cards', 'icon': Icons.badge},
     ];
 
     return Column(
-      crossAxisAlignment:
-          CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
 
       children: [
         Row(
-          mainAxisAlignment:
-              MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
           children: [
             const Text(
@@ -356,10 +301,7 @@ class _HomeDashboardState
               ),
             ),
 
-            TextButton(
-              onPressed: () {},
-              child: const Text('View All'),
-            ),
+            TextButton(onPressed: () {}, child: const Text('View All')),
           ],
         ),
 
@@ -373,8 +315,7 @@ class _HomeDashboardState
 
             itemCount: categories.length,
 
-            separatorBuilder: (_, __) =>
-                const SizedBox(width: 12),
+            separatorBuilder: (_, __) => const SizedBox(width: 12),
 
             itemBuilder: (context, index) {
               final category = categories[index];
@@ -390,16 +331,12 @@ class _HomeDashboardState
 
                       decoration: BoxDecoration(
                         color: AppTheme.iconBlue,
-                        borderRadius:
-                            BorderRadius.circular(16),
-                        border: Border.all(
-                          color: AppTheme.border,
-                        ),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: AppTheme.border),
                       ),
 
                       child: Icon(
-                        category['icon']
-                            as IconData,
+                        category['icon'] as IconData,
                         color: AppTheme.navy,
                       ),
                     ),
@@ -408,8 +345,7 @@ class _HomeDashboardState
 
                     Text(
                       category['name'] as String,
-                      overflow:
-                          TextOverflow.ellipsis,
+                      overflow: TextOverflow.ellipsis,
 
                       style: const TextStyle(
                         fontSize: 11,
@@ -426,12 +362,9 @@ class _HomeDashboardState
     );
   }
 
-  Widget _buildRecentlyFound(
-    BuildContext context,
-  ) {
+  Widget _buildRecentlyFound(BuildContext context) {
     return Column(
-      crossAxisAlignment:
-          CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
 
       children: [
         const Text(
@@ -449,31 +382,20 @@ class _HomeDashboardState
           stream: ItemService().getFoundItems(),
 
           builder: (context, snapshot) {
-            if (snapshot.connectionState ==
-                ConnectionState.waiting) {
-              return const Center(
-                child:
-                    CircularProgressIndicator(),
-              );
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
             }
 
-            if (!snapshot.hasData ||
-                snapshot.data!.docs.isEmpty) {
+            if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
               return _emptyItems();
             }
 
-            final docs =
-                snapshot.data!.docs;
+            final docs = snapshot.data!.docs;
 
             return Column(
               children: docs
                   .take(4)
-                  .map(
-                    (doc) => _itemCard(
-                      context,
-                      doc,
-                    ),
-                  )
+                  .map((doc) => _itemCard(context, doc))
                   .toList(),
             );
           },
@@ -488,192 +410,136 @@ class _HomeDashboardState
   ) {
     final data = doc.data();
 
-    final imageUrl =
-        data['imageUrl'] ?? '';
+    final imageUrl = data['imageUrl'] ?? '';
 
     return InkWell(
       borderRadius: BorderRadius.circular(12),
       onTap: () => Navigator.push(
         context,
-        MaterialPageRoute(
-          builder: (_) => ItemDetailsScreen(itemId: doc.id),
-        ),
+        MaterialPageRoute(builder: (_) => ItemDetailsScreen(itemId: doc.id)),
       ),
       child: Container(
-      margin: const EdgeInsets.only(
-        bottom: 16,
-      ),
+        margin: const EdgeInsets.only(bottom: 16),
 
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius:
-            BorderRadius.circular(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
 
-        border: Border.all(
-          color: AppTheme.border,
+          border: Border.all(color: AppTheme.border),
+
+          boxShadow: const [
+            BoxShadow(blurRadius: 4, color: Color.fromRGBO(0, 0, 0, .08)),
+          ],
         ),
 
-        boxShadow: const [
-          BoxShadow(
-            blurRadius: 4,
-            color: Color.fromRGBO(
-              0,
-              0,
-              0,
-              .08,
-            ),
-          ),
-        ],
-      ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
 
-      child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
-
-        children: [
-          if (imageUrl.isNotEmpty)
-            ClipRRect(
-              borderRadius:
-                  const BorderRadius.vertical(
-                top: Radius.circular(12),
-              ),
-
-              child: Image.network(
-                imageUrl,
-                width: double.infinity,
-                height: 190,
-                fit: BoxFit.cover,
-              ),
-            ),
-
-          Padding(
-            padding:
-                const EdgeInsets.all(16),
-
-            child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start,
-
-              children: [
-                Row(
-                  mainAxisAlignment:
-                      MainAxisAlignment.spaceBetween,
-
-                  children: [
-                    Expanded(
-                      child: Text(
-                        data['title'] ?? 'Unknown item',
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight:
-                              FontWeight.bold,
-                          color:
-                              AppTheme.navy,
-                        ),
-                      ),
-                    ),
-
-                    Container(
-                      padding:
-                          const EdgeInsets
-                              .symmetric(
-                        horizontal: 10,
-                        vertical: 6,
-                      ),
-
-                      decoration:
-                          BoxDecoration(
-                        color:
-                            AppTheme.orange,
-                        borderRadius:
-                            BorderRadius
-                                .circular(
-                          999,
-                        ),
-                      ),
-
-                      child: const Text(
-                        'NEW MATCH',
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight:
-                              FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
+          children: [
+            if (imageUrl.isNotEmpty)
+              ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(12),
                 ),
 
-                const SizedBox(height: 8),
-
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.location_on_outlined,
-                      size: 16,
-                    ),
-
-                    const SizedBox(width: 4),
-
-                    Expanded(
-                      child: Text(
-                        data['location'] ?? '',
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 12),
-
-                SizedBox(
+                child: Image.network(
+                  imageUrl,
                   width: double.infinity,
+                  height: 190,
+                  fit: BoxFit.cover,
+                ),
+              ),
 
-                  child:
-                      ElevatedButton(
-                    onPressed: () async {
-                      await ItemService()
-                          .claimItem(doc.id);
+            Padding(
+              padding: const EdgeInsets.all(16),
 
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(
-                          context,
-                        ).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'Item claimed successfully',
-                            ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                    children: [
+                      Expanded(
+                        child: Text(
+                          data['title'] ?? 'Unknown item',
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: AppTheme.navy,
                           ),
-                        );
-                      }
-                    },
-
-                    style:
-                        ElevatedButton
-                            .styleFrom(
-                      backgroundColor:
-                          AppTheme.navy,
-                      foregroundColor:
-                          Colors.white,
-                      shape:
-                          RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(
-                          8,
                         ),
                       ),
-                    ),
 
-                    child:
-                        const Text(
-                      'Claim Item',
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
+
+                        decoration: BoxDecoration(
+                          color: AppTheme.orange,
+                          borderRadius: BorderRadius.circular(999),
+                        ),
+
+                        child: const Text(
+                          'NEW MATCH',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  Row(
+                    children: [
+                      const Icon(Icons.location_on_outlined, size: 16),
+
+                      const SizedBox(width: 4),
+
+                      Expanded(child: Text(data['location'] ?? '')),
+                    ],
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  SizedBox(
+                    width: double.infinity,
+
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        await ItemService().claimItem(doc.id);
+
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Item claimed successfully'),
+                            ),
+                          );
+                        }
+                      },
+
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.navy,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+
+                      child: const Text('Claim Item'),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
       ),
     );
   }
@@ -682,78 +548,52 @@ class _HomeDashboardState
     return Container(
       width: double.infinity,
 
-      padding:
-          const EdgeInsets.all(32),
+      padding: const EdgeInsets.all(32),
 
       decoration: BoxDecoration(
         color: AppTheme.paleBlue,
-        borderRadius:
-            BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12),
       ),
 
       child: const Column(
         children: [
-          Icon(
-            Icons.search_off,
-            size: 40,
-            color: AppTheme.navy,
-          ),
+          Icon(Icons.search_off, size: 40, color: AppTheme.navy),
 
           SizedBox(height: 8),
 
-          Text(
-            'No items found yet.',
-          ),
+          Text('No items found yet.'),
         ],
       ),
     );
   }
 
-  Widget _buildStatistics(
-    BuildContext context,
-  ) {
+  Widget _buildStatistics(BuildContext context) {
     return Container(
-      padding:
-          const EdgeInsets.symmetric(
-        vertical: 24,
-      ),
+      padding: const EdgeInsets.symmetric(vertical: 24),
 
       decoration: BoxDecoration(
         color: AppTheme.paleBlue,
-        borderRadius:
-            BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12),
 
-        border: Border.all(
-          color: AppTheme.border,
-        ),
+        border: Border.all(color: AppTheme.border),
       ),
 
       child: const Row(
         children: [
           Expanded(
-            child: _Stat(
-              value: '124',
-              label: 'Items Lost',
-            ),
+            child: _Stat(value: '124', label: 'Items Lost'),
           ),
 
           _Divider(),
 
           Expanded(
-            child: _Stat(
-              value: '86',
-              label: 'Items Found',
-              orange: true,
-            ),
+            child: _Stat(value: '86', label: 'Items Found', orange: true),
           ),
 
           _Divider(),
 
           Expanded(
-            child: _Stat(
-              value: '92%',
-              label: 'Return Rate',
-            ),
+            child: _Stat(value: '92%', label: 'Return Rate'),
           ),
         ],
       ),
@@ -766,11 +606,7 @@ class _Stat extends StatelessWidget {
   final String label;
   final bool orange;
 
-  const _Stat({
-    required this.value,
-    required this.label,
-    this.orange = false,
-  });
+  const _Stat({required this.value, required this.label, this.orange = false});
 
   @override
   Widget build(BuildContext context) {
@@ -781,9 +617,7 @@ class _Stat extends StatelessWidget {
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: orange
-                ? const Color(0xFF875200)
-                : AppTheme.navy,
+            color: orange ? const Color(0xFF875200) : AppTheme.navy,
           ),
         ),
 
@@ -791,10 +625,7 @@ class _Stat extends StatelessWidget {
 
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-          ),
+          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
         ),
       ],
     );
@@ -806,10 +637,6 @@ class _Divider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 40,
-      width: 1,
-      color: AppTheme.border,
-    );
+    return Container(height: 40, width: 1, color: AppTheme.border);
   }
 }

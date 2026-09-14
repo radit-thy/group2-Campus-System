@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'register.dart';
-import 'dashboard.dart';
+import '../services/auth_service.dart';
 
 class HomeLogin extends StatefulWidget {
   const HomeLogin({super.key});
@@ -56,21 +56,11 @@ class _HomeLoginState extends State<HomeLogin> {
       // FIREBASE LOGIN
       // ----------------------------------------------------------
 
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      await AuthService().login(email, password);
 
       if (!mounted) return;
 
-      // ----------------------------------------------------------
-      // LOGIN SUCCESS
-      // ----------------------------------------------------------
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const DashboardPage()),
-      );
+      // AuthGate rebuilds and displays HomeScreen after Firebase signs in.
     } on FirebaseAuthException catch (e) {
       if (!mounted) return;
 

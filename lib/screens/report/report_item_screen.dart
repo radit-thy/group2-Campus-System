@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +24,8 @@ class _ReportItemScreenState extends State<ReportItemScreen> {
   final storageController = TextEditingController();
 
   final ImagePicker picker = ImagePicker();
-  File? selectedImage;
+  XFile? selectedImage;
+  Uint8List? selectedImageBytes;
 
   late String type;
   String category = 'Electronics';
@@ -60,13 +61,29 @@ class _ReportItemScreenState extends State<ReportItemScreen> {
   }
 
   Future<void> takePhoto() async {
-    final XFile? image = await picker.pickImage(source: ImageSource.camera, imageQuality: 80);
-    if (image != null) setState(() => selectedImage = File(image.path));
+    final image = await picker.pickImage(
+      source: ImageSource.camera,
+      imageQuality: 80,
+    );
+    if (image != null) await _selectImage(image);
   }
 
   Future<void> chooseFromStorage() async {
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
-    if (image != null) setState(() => selectedImage = File(image.path));
+    final image = await picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 80,
+    );
+    if (image != null) await _selectImage(image);
+  }
+
+  Future<void> _selectImage(XFile image) async {
+    final bytes = await image.readAsBytes();
+    if (!mounted) return;
+
+    setState(() {
+      selectedImage = image;
+      selectedImageBytes = bytes;
+    });
   }
 
   void _showPickerSheet() {
@@ -80,7 +97,10 @@ class _ReportItemScreenState extends State<ReportItemScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              leading: const Icon(Icons.camera_alt_outlined, color: AppTheme.navy),
+              leading: const Icon(
+                Icons.camera_alt_outlined,
+                color: AppTheme.navy,
+              ),
               title: const Text('Take a photo'),
               onTap: () {
                 Navigator.pop(sheetContext);
@@ -88,7 +108,10 @@ class _ReportItemScreenState extends State<ReportItemScreen> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.photo_library_outlined, color: AppTheme.navy),
+              leading: const Icon(
+                Icons.photo_library_outlined,
+                color: AppTheme.navy,
+              ),
               title: const Text('Choose from gallery'),
               onTap: () {
                 Navigator.pop(sheetContext);
@@ -102,7 +125,9 @@ class _ReportItemScreenState extends State<ReportItemScreen> {
   }
 
   void _error(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   bool _validateBasics() {
@@ -142,7 +167,11 @@ class _ReportItemScreenState extends State<ReportItemScreen> {
 
       String imageUrl = '';
       if (selectedImage != null) {
-        imageUrl = await StorageService().uploadItemImage(selectedImage!, user.uid);
+        imageUrl = await StorageService().uploadItemImage(
+          selectedImageBytes!,
+          user.uid,
+          contentType: selectedImage!.mimeType ?? 'image/jpeg',
+        );
       }
 
       await ItemService().createItem(
@@ -159,7 +188,11 @@ class _ReportItemScreenState extends State<ReportItemScreen> {
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(type == 'found' ? 'Found item posted!' : 'Lost item reported!')),
+        SnackBar(
+          content: Text(
+            type == 'found' ? 'Found item posted!' : 'Lost item reported!',
+          ),
+        ),
       );
       Navigator.pop(context);
     } catch (e) {
@@ -171,7 +204,9 @@ class _ReportItemScreenState extends State<ReportItemScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return type == 'found' ? _buildFoundForm(context) : _buildLostWizard(context);
+    return type == 'found'
+        ? _buildFoundForm(context)
+        : _buildLostWizard(context);
   }
 
   // ---------------------------------------------------------------------
@@ -187,12 +222,19 @@ class _ReportItemScreenState extends State<ReportItemScreen> {
           children: [
             const Text(
               'Help return an item to its owner by providing details below.',
-              style: TextStyle(fontSize: 13.5, color: AppTheme.textGrey, height: 1.4),
+              style: TextStyle(
+                fontSize: 13.5,
+                color: AppTheme.textGrey,
+                height: 1.4,
+              ),
             ),
             const SizedBox(height: 22),
             const _FieldLabel('PHOTOS'),
             const SizedBox(height: 8),
-            _PhotoUploadBox(image: selectedImage, onTap: _showPickerSheet),
+            _PhotoUploadBox(
+              imageBytes: selectedImageBytes,
+              onTap: _showPickerSheet,
+            ),
             const SizedBox(height: 20),
             const _FieldLabel('WHAT DID YOU FIND?'),
             const SizedBox(height: 8),
@@ -228,7 +270,11 @@ class _ReportItemScreenState extends State<ReportItemScreen> {
             const SizedBox(height: 6),
             const Text(
               'Providing an official lost & found desk location is recommended.',
-              style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic, color: AppTheme.textGrey),
+              style: TextStyle(
+                fontSize: 12,
+                fontStyle: FontStyle.italic,
+                color: AppTheme.textGrey,
+              ),
             ),
             const SizedBox(height: 20),
             const _FieldLabel('DESCRIPTION'),
@@ -249,17 +295,30 @@ class _ReportItemScreenState extends State<ReportItemScreen> {
                     ? const SizedBox(
                         width: 16,
                         height: 16,
-                        child: CircularProgressIndicator(strokeWidth: 2, color: AppTheme.navy),
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: AppTheme.navy,
+                        ),
                       )
-                    : const Icon(Icons.send_outlined, size: 18, color: AppTheme.navy),
+                    : const Icon(
+                        Icons.send_outlined,
+                        size: 18,
+                        color: AppTheme.navy,
+                      ),
                 label: Text(
                   loading ? 'Posting...' : 'Post Found Item',
-                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppTheme.navy),
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: AppTheme.navy,
+                  ),
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.orange,
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(28),
+                  ),
                   elevation: 0,
                 ),
               ),
@@ -299,7 +358,9 @@ class _ReportItemScreenState extends State<ReportItemScreen> {
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         side: const BorderSide(color: AppTheme.border),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(28),
+                        ),
                       ),
                       child: const Text('Back'),
                     ),
@@ -313,7 +374,9 @@ class _ReportItemScreenState extends State<ReportItemScreen> {
                       backgroundColor: AppTheme.navy,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(28),
+                      ),
                     ),
                     child: loading
                         ? const CircularProgressIndicator(color: Colors.white)
@@ -388,7 +451,10 @@ class _ReportItemScreenState extends State<ReportItemScreen> {
           children: [
             const _FieldLabel('PHOTOS (OPTIONAL)'),
             const SizedBox(height: 8),
-            _PhotoUploadBox(image: selectedImage, onTap: _showPickerSheet),
+            _PhotoUploadBox(
+              imageBytes: selectedImageBytes,
+              onTap: _showPickerSheet,
+            ),
             const SizedBox(height: 8),
             const Text(
               'A photo of the item, or a similar one, helps others recognize it.',
@@ -429,7 +495,9 @@ class _StepIndicator extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 14,
-              backgroundColor: isActive || isDone ? AppTheme.navy : AppTheme.border,
+              backgroundColor: isActive || isDone
+                  ? AppTheme.navy
+                  : AppTheme.border,
               child: isDone
                   ? const Icon(Icons.check, size: 14, color: Colors.white)
                   : Text(
@@ -495,7 +563,9 @@ class _StyledTextField extends StatelessWidget {
       maxLines: maxLines,
       decoration: InputDecoration(
         hintText: hint,
-        prefixIcon: icon != null ? Icon(icon, size: 18, color: AppTheme.textGrey) : null,
+        prefixIcon: icon != null
+            ? Icon(icon, size: 18, color: AppTheme.textGrey)
+            : null,
       ),
     );
   }
@@ -506,32 +576,43 @@ class _CategoryDropdown extends StatelessWidget {
   final List<String> items;
   final ValueChanged<String?> onChanged;
 
-  const _CategoryDropdown({required this.value, required this.items, required this.onChanged});
+  const _CategoryDropdown({
+    required this.value,
+    required this.items,
+    required this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<String>(
       value: value,
-      items: items.map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
+      items: items
+          .map((c) => DropdownMenuItem(value: c, child: Text(c)))
+          .toList(),
       onChanged: onChanged,
     );
   }
 }
 
 class _PhotoUploadBox extends StatelessWidget {
-  final File? image;
+  final Uint8List? imageBytes;
   final VoidCallback onTap;
-  const _PhotoUploadBox({required this.image, required this.onTap});
+  const _PhotoUploadBox({required this.imageBytes, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
-      child: image != null
+      child: imageBytes != null
           ? ClipRRect(
               borderRadius: BorderRadius.circular(16),
-              child: Image.file(image!, height: 220, width: double.infinity, fit: BoxFit.cover),
+              child: Image.memory(
+                imageBytes!,
+                height: 220,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
             )
           : CustomPaint(
               painter: _DashedBorderPainter(color: AppTheme.border, radius: 16),
@@ -542,11 +623,25 @@ class _PhotoUploadBox extends StatelessWidget {
                   children: [
                     Container(
                       padding: const EdgeInsets.all(10),
-                      decoration: const BoxDecoration(color: AppTheme.paleBlue, shape: BoxShape.circle),
-                      child: const Icon(Icons.add_a_photo_outlined, color: AppTheme.navy, size: 22),
+                      decoration: const BoxDecoration(
+                        color: AppTheme.paleBlue,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.add_a_photo_outlined,
+                        color: AppTheme.navy,
+                        size: 22,
+                      ),
                     ),
                     const SizedBox(height: 10),
-                    const Text('Add Photos', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppTheme.navy)),
+                    const Text(
+                      'Add Photos',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                        color: AppTheme.navy,
+                      ),
+                    ),
                     const SizedBox(height: 6),
                     const Text(
                       'Clear shots of the item help owners identify it',
@@ -594,7 +689,10 @@ class _DashedBorderPainter extends CustomPainter {
       double distance = 0;
       while (distance < metric.length) {
         final next = distance + dashWidth;
-        dashedPath.addPath(metric.extractPath(distance, next.clamp(0, metric.length)), Offset.zero);
+        dashedPath.addPath(
+          metric.extractPath(distance, next.clamp(0, metric.length)),
+          Offset.zero,
+        );
         distance = next + dashGap;
       }
     }
@@ -612,7 +710,10 @@ class _LegalDisclaimer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: AppTheme.lightBlue, borderRadius: BorderRadius.circular(14)),
+      decoration: BoxDecoration(
+        color: AppTheme.lightBlue,
+        borderRadius: BorderRadius.circular(14),
+      ),
       child: const Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -624,7 +725,12 @@ class _LegalDisclaimer extends StatelessWidget {
               children: [
                 Text(
                   'LEGAL DISCLAIMER',
-                  style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, letterSpacing: 0.4, color: AppTheme.navy),
+                  style: TextStyle(
+                    fontSize: 11.5,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.4,
+                    color: AppTheme.navy,
+                  ),
                 ),
                 SizedBox(height: 6),
                 Text(
@@ -632,7 +738,11 @@ class _LegalDisclaimer extends StatelessWidget {
                   'rightful owner. If you are unable to keep the item safe, please '
                   'surrender it to Campus Security or the nearest administrative '
                   'office immediately.',
-                  style: TextStyle(fontSize: 12.5, color: AppTheme.textDark, height: 1.45),
+                  style: TextStyle(
+                    fontSize: 12.5,
+                    color: AppTheme.textDark,
+                    height: 1.45,
+                  ),
                 ),
               ],
             ),
