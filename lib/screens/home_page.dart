@@ -705,34 +705,61 @@ class _HomeDashboardState extends State<HomeDashboard> {
         ),
       ),
 
-      child: Row(
-        children: [
-          Expanded(
-            child: _Stat(
-              value: '124',
-              label: 'Items Lost',
-            ),
-          ),
+      child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+        stream: ItemService().getDashboardItems(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const Center(child: Text('Unable to load statistics'));
+          }
 
-          _Divider(),
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-          Expanded(
-            child: _Stat(
-              value: '86',
-              label: 'Items Found',
-              orange: true,
-            ),
-          ),
+          final items = snapshot.data!.docs
+              .map((document) => document.data())
+              .toList();
+          final lostCount = items.where((item) => item['type'] == 'lost').length;
+          final foundItems =
+              items.where((item) => item['type'] == 'found').toList();
+          final foundCount = foundItems.length;
+          final returnedCount = foundItems
+              .where((item) => item['status'] == 'claimed')
+              .length;
+          final returnRate = foundCount == 0
+              ? 0
+              : (returnedCount / foundCount * 100).round();
 
-          _Divider(),
+          return Row(
+            children: [
+              Expanded(
+                child: _Stat(
+                  value: '$lostCount',
+                  label: 'Items Lost',
+                ),
+              ),
 
-          Expanded(
-            child: _Stat(
-              value: '92%',
-              label: 'Return Rate',
-            ),
-          ),
-        ],
+              const _Divider(),
+
+              Expanded(
+                child: _Stat(
+                  value: '$foundCount',
+                  label: 'Items Found',
+                  orange: true,
+                ),
+              ),
+
+              const _Divider(),
+
+              Expanded(
+                child: _Stat(
+                  value: '$returnRate%',
+                  label: 'Return Rate',
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

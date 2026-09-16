@@ -7,6 +7,11 @@ class ItemService {
   CollectionReference<Map<String, dynamic>> get _items =>
       _firestore.collection('items');
 
+  /// Emits every item report so dashboard totals stay live as reports are
+  /// created or claimed.
+  Stream<QuerySnapshot<Map<String, dynamic>>> getDashboardItems() {
+    return _items.snapshots();
+  }
   Future<void> createItem({
     required String title,
     required String description,
